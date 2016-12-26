@@ -19,7 +19,15 @@ public class tree_height {
 			return Integer.parseInt(next());
 		}
 	}
-
+  
+    public class Node {
+    	
+    	ArrayList<Node> children = new ArrayList<Node>();	
+    	void addChild(Node n) {
+    		this.children.add(n);
+    	} 
+    }
+    
 	public class TreeHeight {
 		int n;
 		int parent[];
@@ -34,15 +42,41 @@ public class tree_height {
 		}
 
 		int computeHeight() {
-                        // Replace this code with a faster implementation
-			int maxHeight = 0;
-			for (int vertex = 0; vertex < n; vertex++) {
-				int height = 0;
-				for (int i = vertex; i != -1; i = parent[i])
-					height++;
-				maxHeight = Math.max(maxHeight, height);
+                        // Original code replaced with a faster implementation
+			ArrayList<Node> nodes = new ArrayList<Node>();	
+			for (int i=0; i<n; i++) {
+				nodes.add(new Node());
 			}
-			return maxHeight;
+			int p_index = 0;
+			Node root_node = new Node();
+			for (int i=0; i<n; i++) {
+				p_index = parent[i];
+				if (p_index == -1) {
+					root_node = nodes.get(i);
+				}
+				else {
+					nodes.get(p_index).addChild(nodes.get(i));
+				}	
+			}
+			//Breadth first search 
+			LinkedList<Node> que = new LinkedList<Node>();
+			Node pRoot = new Node();
+			que.add(root_node);
+			int depth = 0;  
+		    while( !que.isEmpty() ){  
+		         ++depth;  
+		        int curLevelNodesTotal = que.size();  
+		        int cnt = 0;  
+		        while( cnt < curLevelNodesTotal ){  
+		            ++cnt;  
+		            pRoot = que.peek(); 
+		            que.remove();
+		            for (int i=0; i<pRoot.children.size(); i++) {
+		            	que.add(pRoot.children.get(i));
+		            }
+		        }  
+		    }  
+			return depth;
 		}
 	}
 

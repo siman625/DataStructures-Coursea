@@ -28,20 +28,33 @@ class check_brackets {
         InputStreamReader input_stream = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input_stream);
         String text = reader.readLine();
-
+        int count=0;
+        int flag=0;
         Stack<Bracket> opening_brackets_stack = new Stack<Bracket>();
         for (int position = 0; position < text.length(); ++position) {
             char next = text.charAt(position);
-
             if (next == '(' || next == '[' || next == '{') {
-                // Process opening bracket, write your code here
+            	Bracket open_bracket= new Bracket(next,position); 
+            	opening_brackets_stack.push(open_bracket);
             }
 
             if (next == ')' || next == ']' || next == '}') {
-                // Process closing bracket, write your code here
-            }
+            	count=position;
+            	if (opening_brackets_stack.empty()){
+            		System.out.println(position+1);
+            		flag=1;
+            		break;}          
+            	else if (opening_brackets_stack.peek().Match(next)){
+            			opening_brackets_stack.pop();}
+            	else {
+            		System.out.println(position+1);
+            		flag=1;
+            		break;}            	
+            	}
         }
-
-        // Printing answer, write your code here
+        if ((count<=text.length()-1) && opening_brackets_stack.empty() && flag==0)
+        	System.out.println("Success!");
+        else if (opening_brackets_stack.empty()==false && flag==0)
+        		System.out.println(count+1);
     }
 }
